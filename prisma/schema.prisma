@@ -32,7 +32,7 @@ model User {
 model EmailVerification {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String   @unique
   type      String   @default("verify") // verify | reset
   expiresAt DateTime
@@ -43,16 +43,16 @@ model EmailVerification {
 model Wallet {
   id     String @id @default(cuid())
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   coins  Int    @default(0)
 }
 
 model ChapterPurchase {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   chapterId String
-  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   coinsPaid Int
   createdAt DateTime @default(now())
 
@@ -62,7 +62,7 @@ model ChapterPurchase {
 model CoinTransaction {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   amount    Int      // positive = credit, negative = debit
   description String
   createdAt DateTime @default(now())
@@ -71,14 +71,14 @@ model CoinTransaction {
 model Novel {
   id          String      @id @default(cuid())
   authorId    String
-  author      User        @relation(fields: [authorId], references: [id])
+  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   title       String
   description String
   coverUrl    String      @default("")
   status      String      @default("ongoing")
   underReview Boolean     @default(false)
   categoryId  String?
-  category    Category?   @relation(fields: [categoryId], references: [id])
+  category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   genres      NovelGenre[]
   tags        NovelTag[]
   chapters    Chapter[]
@@ -99,9 +99,9 @@ model Genre {
 
 model NovelGenre {
   novelId String
-  novel   Novel  @relation(fields: [novelId], references: [id])
+  novel   Novel  @relation(fields: [novelId], references: [id], onDelete: Cascade)
   genreId String
-  genre   Genre  @relation(fields: [genreId], references: [id])
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
 
   @@id([novelId, genreId])
 }
@@ -115,9 +115,9 @@ model Tag {
 
 model NovelTag {
   novelId String
-  novel   Novel @relation(fields: [novelId], references: [id])
+  novel   Novel @relation(fields: [novelId], references: [id], onDelete: Cascade)
   tagId   String
-  tag     Tag   @relation(fields: [tagId], references: [id])
+  tag     Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([novelId, tagId])
 }
@@ -132,7 +132,7 @@ model Category {
 model Chapter {
   id           String  @id @default(cuid())
   novelId      String
-  novel        Novel   @relation(fields: [novelId], references: [id])
+  novel        Novel   @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapterNumber Int
   title        String
   content      String
@@ -152,9 +152,9 @@ model Chapter {
 model ChapterComment {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   chapterId String
-  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -163,11 +163,11 @@ model ChapterComment {
 model ReadingHistory {
   id        String @id @default(cuid())
   userId    String
-  user      User   @relation(fields: [userId], references: [id])
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   novelId   String
-  novel     Novel  @relation(fields: [novelId], references: [id])
+  novel     Novel  @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   scrollPosition Float @default(0)
   pageIndex Int    @default(0)
 
@@ -177,9 +177,9 @@ model ReadingHistory {
 model Review {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   novelId   String
-  novel     Novel    @relation(fields: [novelId], references: [id])
+  novel     Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
   rating    Int
   comment   String   @default("")
   createdAt DateTime @default(now())
@@ -191,9 +191,9 @@ model Review {
 model Bookmark {
   id      String @id @default(cuid())
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   novelId String
-  novel   Novel  @relation(fields: [novelId], references: [id])
+  novel   Novel  @relation(fields: [novelId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([userId, novelId])
@@ -202,11 +202,11 @@ model Bookmark {
 model Report {
   id        String  @id @default(cuid())
   userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   novelId   String
-  novel     Novel   @relation(fields: [novelId], references: [id])
+  novel     Novel   @relation(fields: [novelId], references: [id], onDelete: Cascade)
   chapterId String?
-  chapter   Chapter? @relation(fields: [chapterId], references: [id])
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   reason    String
   createdAt DateTime @default(now())
 }

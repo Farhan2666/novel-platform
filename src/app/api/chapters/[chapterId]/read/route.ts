@@ -3,10 +3,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { chapterId: string } }
 ) {
   try {
-    const { id } = params;
+    const { chapterId: id } = params;
     const chapter = await prisma.chapter.findUnique({
       where: { id },
       select: {

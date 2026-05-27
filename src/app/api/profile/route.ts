@@ -10,16 +10,10 @@ export async function PUT(request: NextRequest) {
 
     const { username, email, password, avatarUrl, role } = await request.json();
 
-    if (role === "author" || role === "reader") {
-      const updated = await prisma.user.update({
-        where: { id: user.id },
-        data: { role },
-        select: { id: true, username: true, email: true, role: true, avatarUrl: true },
-      });
-      return Response.json(updated);
-    }
-
     const data: any = {};
+    if (role === "author" || role === "reader") {
+      data.role = role;
+    }
     if (username) {
       const existing = await prisma.user.findUnique({ where: { username } });
       if (existing && existing.id !== user.id) {

@@ -22,7 +22,7 @@ Platform UGC untuk penulis dan pembaca novel. Gratis baca, gratis terbitkan kary
 ## Stack
 
 - Next.js 14 (App Router) + TypeScript
-- Prisma + SQLite (bisa diganti PostgreSQL)
+- Prisma + PostgreSQL
 - Tailwind CSS
 - TipTap (rich text editor)
 - JWT + bcryptjs

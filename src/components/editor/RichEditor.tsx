@@ -2,6 +2,7 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
 import { Bold, Italic, Heading1, Heading2, List, ListOrdered, Quote, Undo, Redo } from "lucide-react";
 
 interface RichEditorProps {
@@ -12,13 +13,17 @@ interface RichEditorProps {
 
 export default function RichEditor({ content, onChange, placeholder }: RichEditorProps) {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: placeholder || "Tulis cerita kamu di sini...",
+      }),
+    ],
     content,
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
     editorProps: {
       attributes: {
         class: "prose prose-invert max-w-none focus:outline-none min-h-[400px] px-4 py-3 text-sm leading-relaxed",
-        placeholder: placeholder || "Tulis cerita kamu di sini...",
       },
     },
   });

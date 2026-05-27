@@ -74,10 +74,11 @@ export default function NovelDetailPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setNovel((prev: any) => ({
-        ...prev,
-        reviews: [data, ...(prev.reviews || [])],
-      }));
+      setNovel((prev: any) => {
+        const reviews = [data, ...(prev.reviews || [])];
+        const avgRating = reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length;
+        return { ...prev, reviews, avgRating };
+      });
       setComment("");
     } catch (err: any) {
       setError(err.message);

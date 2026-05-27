@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Users, BookOpen, ShoppingBag, Loader2, AlertTriangle, Search, Tag, FolderOpen, Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Shield, Users, BookOpen, Flag, Loader2, AlertTriangle, Search, Tag, FolderOpen, Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
@@ -124,7 +124,7 @@ export default function AdminPage() {
           { label: "Users", value: stats.users, icon: Users },
           { label: "Novel", value: stats.novels, icon: BookOpen },
           { label: "Bab Di-flag", value: stats.flagged, icon: AlertTriangle, warn: stats.flagged > 0 },
-          { label: "Laporan", value: stats.reports, icon: ShoppingBag },
+          { label: "Laporan", value: stats.reports, icon: Flag },
         ].map((s) => (
           <div key={s.label} className={cn("bg-white/5 border rounded-2xl p-4", s.warn ? "border-yellow-500/30" : "border-white/10")}>
             <s.icon className={cn("w-5 h-5 mb-2", s.warn ? "text-yellow-400" : "text-emerald-400")} />

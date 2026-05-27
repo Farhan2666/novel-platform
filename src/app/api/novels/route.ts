@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     const where: any = {};
-    if (search) where.title = { contains: search };
+    if (search) where.title = { contains: search, mode: "insensitive" };
     if (status) where.status = status;
     if (category) where.category = { slug: category };
     if (genre) where.genres = { some: { genre: { slug: genre } } };

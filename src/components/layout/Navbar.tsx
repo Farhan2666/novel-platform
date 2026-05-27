@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pen, BookOpen, User, LogIn, Menu, X, Plus, Library } from "lucide-react";
+import { BookOpen, User, Menu, X, Plus } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 
