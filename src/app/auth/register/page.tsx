@@ -20,12 +20,11 @@ export default function RegisterPage() {
     setError("");
     try {
       await register(form.username, form.email, form.password);
-      setLoading(false);
       router.push("/");
     } catch (err: any) {
       setError(err.message);
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
