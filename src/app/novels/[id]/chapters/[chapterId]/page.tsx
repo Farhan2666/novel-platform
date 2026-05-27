@@ -176,13 +176,14 @@ function ReadingContent() {
   return (
     <div className="min-h-screen transition-colors duration-300" style={{ background: currentTheme.bg }}>
       {chapter.underReview && (
-        <div className="fixed top-16 left-0 right-0 z-40 bg-yellow-500/90 text-black text-[10px] text-center py-1.5 px-4 flex items-center justify-center gap-1">
+        <div className="fixed top-16 left-0 right-0 z-50 bg-yellow-500/90 text-black text-[10px] text-center py-1 px-4 flex items-center justify-center gap-1">
           <AlertTriangle className="w-3 h-3" /> Bab ini sedang dalam review
         </div>
       )}
 
+      {/* Reading page nav bar — below main navbar (z-50) */}
       <div className={cn(
-        "fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 h-12 transition-colors",
+        "fixed top-16 left-0 right-0 z-40 flex items-center justify-between px-4 h-11 transition-colors",
         theme.id === "dark" ? "bg-[#121212]/90" : "bg-white/80 backdrop-blur-md"
       )}
         style={theme.id !== "dark" ? { backgroundColor: `${currentTheme.bg}dd` } : {}}
@@ -198,9 +199,9 @@ function ReadingContent() {
         </div>
       </div>
 
-      {/* Quick font toggle bar */}
+      {/* Quick font toggle bar — below reading nav */}
       <div
-        className="fixed top-12 left-0 right-0 z-20 flex items-center justify-center gap-1 px-4 py-1.5 border-b transition-colors overflow-x-auto"
+        className="fixed top-[6.75rem] left-0 right-0 z-30 flex items-center justify-center gap-1 px-4 py-1.5 border-b transition-colors overflow-x-auto"
         style={{
           backgroundColor: theme.id === "dark" ? "#121212" : currentTheme.bg,
           borderColor: theme.id === "dark" ? "#2A2A2A" : "rgba(0,0,0,0.1)",
@@ -230,7 +231,7 @@ function ReadingContent() {
       </div>
 
       {showSettings && (
-        <div className="fixed top-[7.5rem] left-0 right-0 z-30 p-4 border-b transition-colors" style={{
+        <div className="fixed top-[9.5rem] left-0 right-0 bottom-0 z-30 p-4 overflow-y-auto border-b transition-colors" style={{
           backgroundColor: theme.id === "dark" ? "#1A1A1A" : currentTheme.bg,
           borderColor: theme.id === "dark" ? "#2A2A2A" : "rgba(0,0,0,0.1)",
           color: currentTheme.text,
@@ -308,7 +309,7 @@ function ReadingContent() {
       {navMode === "scroll" ? (
         <div
           ref={contentRef}
-          className={`scroll-page pt-24 px-4 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
+          className={`scroll-page pt-36 px-4 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
           style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}
         >
           <div
@@ -321,7 +322,7 @@ function ReadingContent() {
           />
         </div>
       ) : (
-        <div ref={flipContainerRef} className={`flip-page pt-24 px-6 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
+        <div ref={flipContainerRef} className={`flip-page pt-36 px-6 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
           <div className="reading-container">
             <p>{pages[currentPage] || ""}</p>
           </div>
