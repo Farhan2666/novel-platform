@@ -1,0 +1,62 @@
+"use client";
+
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+
+interface ThemeConfig {
+  id: string;
+  name: string;
+  bg: string;
+  text: string;
+  texture?: string;
+  isTexture: boolean;
+}
+
+const THEMES: ThemeConfig[] = [
+  { id: "classic", name: "Klasik", bg: "#F4ECD8", text: "#2B2519", isTexture: false },
+  { id: "dark", name: "Malam", bg: "#121212", text: "#E0E0E0", isTexture: false },
+  { id: "mint", name: "Estetik Mint", bg: "#E8F5E9", text: "#263238", isTexture: false },
+  { id: "pink", name: "Estetik Soft Pink", bg: "#FCE4EC", text: "#4A148C", isTexture: false },
+  { id: "old-book", name: "Buku Tua", bg: "#F4ECD8", text: "#1F1A12", isTexture: true },
+];
+
+interface ThemeContext {
+  theme: ThemeConfig;
+  themes: ThemeConfig[];
+  fontScale: number;
+  navMode: "scroll" | "flip";
+  setTheme: (id: string) => void;
+  setFontScale: (s: number) => void;
+  setNavMode: (m: "scroll" | "flip") => void;
+}
+
+const ThemeCtx = createContext<ThemeContext>({
+  theme: THEMES[0],
+  themes: THEMES,
+  fontScale: 100,
+  navMode: "scroll",
+  setTheme: () => {},
+  setFontScale: () => {},
+  setNavMode: () => {},
+});
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [themeId, setThemeId] = useState("classic");
+  const [fontScale, setFontScale] = useState(100);
+  const [navMode, setNavMode] = useState<"scroll" | "flip">("scroll");
+
+  const theme = THEMES.find((t) => t.id === themeId) || THEMES[0];
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--reading-bg", theme.bg);
+    document.documentElement.style.setProperty("--reading-text", theme.text);
+    document.documentElement.style.setProperty("--reading-font-scale", `${fontScale}%`);
+  }, [theme, fontScale]);
+
+  return (
+    <ThemeCtx.Provider value={{ theme, themes: THEMES, fontScale, navMode, setTheme: setThemeId, setFontScale, setNavMode }}>
+      {children}
+    </ThemeCtx.Provider>
+  );
+}
+
+export const useTheme = () => useContext(ThemeCtx);

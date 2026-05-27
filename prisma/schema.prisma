@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      String   @default("reader")
+  avatarUrl String   @default("")
+  emailVerified Boolean @default(false)
+  novels    Novel[]
+  reviews   Review[]
+  reports   Report[]
+  histories ReadingHistory[]
+  bookmarks       Bookmark[]
+  chapterComments ChapterComment[]
+  emailVerifications EmailVerification[]
+  wallet          Wallet?
+  purchases       ChapterPurchase[]
+  coinTransactions CoinTransaction[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EmailVerification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  type      String   @default("verify") // verify | reset
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Wallet {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  coins  Int    @default(0)
+}
+
+model ChapterPurchase {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  coinsPaid Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, chapterId])
+}
+
+model CoinTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int      // positive = credit, negative = debit
+  description String
+  createdAt DateTime @default(now())
+}
+
+model Novel {
+  id          String      @id @default(cuid())
+  authorId    String
+  author      User        @relation(fields: [authorId], references: [id])
+  title       String
+  description String
+  coverUrl    String      @default("")
+  status      String      @default("ongoing")
+  underReview Boolean     @default(false)
+  categoryId  String?
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  genres      NovelGenre[]
+  tags        NovelTag[]
+  chapters    Chapter[]
+  reviews     Review[]
+  reports     Report[]
+  bookmarks       Bookmark[]
+  histories       ReadingHistory[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Genre {
+  id     String      @id @default(cuid())
+  name   String      @unique
+  slug   String      @unique
+  novels NovelGenre[]
+}
+
+model NovelGenre {
+  novelId String
+  novel   Novel  @relation(fields: [novelId], references: [id])
+  genreId String
+  genre   Genre  @relation(fields: [genreId], references: [id])
+
+  @@id([novelId, genreId])
+}
+
+model Tag {
+  id     String     @id @default(cuid())
+  name   String     @unique
+  slug   String     @unique
+  novels NovelTag[]
+}
+
+model NovelTag {
+  novelId String
+  novel   Novel @relation(fields: [novelId], references: [id])
+  tagId   String
+  tag     Tag   @relation(fields: [tagId], references: [id])
+
+  @@id([novelId, tagId])
+}
+
+model Category {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  slug   String  @unique
+  novels Novel[]
+}
+
+model Chapter {
+  id           String  @id @default(cuid())
+  novelId      String
+  novel        Novel   @relation(fields: [novelId], references: [id])
+  chapterNumber Int
+  title        String
+  content      String
+  accessType   String  @default("free")
+  coinPrice    Int     @default(0)
+  underReview  Boolean @default(false)
+  reports      Report[]
+  comments     ChapterComment[]
+  purchases    ChapterPurchase[]
+  histories    ReadingHistory[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([novelId, chapterNumber])
+}
+
+model ChapterComment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ReadingHistory {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+  novelId   String
+  novel     Novel  @relation(fields: [novelId], references: [id])
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  scrollPosition Float @default(0)
+  pageIndex Int    @default(0)
+
+  @@unique([userId, novelId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  novelId   String
+  novel     Novel    @relation(fields: [novelId], references: [id])
+  rating    Int
+  comment   String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, novelId])
+}
+
+model Bookmark {
+  id      String @id @default(cuid())
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  novelId String
+  novel   Novel  @relation(fields: [novelId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, novelId])
+}
+
+model Report {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  novelId   String
+  novel     Novel   @relation(fields: [novelId], references: [id])
+  chapterId String?
+  chapter   Chapter? @relation(fields: [chapterId], references: [id])
+  reason    String
+  createdAt DateTime @default(now())
+}

@@ -1,26 +1,55 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --reading-bg: #F4ECD8;
+  --reading-text: #2B2519;
+  --reading-font-scale: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200;
+  }
+  .btn-primary {
+    @apply btn bg-emerald-500 text-black hover:bg-emerald-400 active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply btn border border-white/20 text-white/80 hover:bg-white/10;
+  }
+  .card {
+    @apply bg-white/5 border border-white/10 rounded-2xl hover:border-white/20 transition-all duration-300;
+  }
+  .input {
+    @apply w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 transition-all;
+  }
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 3px; }
+
+.ProseMirror p { margin: 0.5em 0; }
+.ProseMirror h1 { font-size: 1.5em; font-weight: 700; margin: 0.8em 0 0.3em; }
+.ProseMirror h2 { font-size: 1.25em; font-weight: 600; margin: 0.6em 0 0.3em; }
+.ProseMirror ul { list-style: disc; padding-left: 1.5em; margin: 0.5em 0; }
+.ProseMirror ol { list-style: decimal; padding-left: 1.5em; margin: 0.5em 0; }
+.ProseMirror li { margin: 0.2em 0; }
+.ProseMirror blockquote { border-left: 3px solid rgba(255,255,255,0.2); padding-left: 1em; margin: 0.5em 0; opacity: 0.8; font-style: italic; }
+.ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; color: rgba(255,255,255,0.2); pointer-events: none; height: 0; }
+.ProseMirror strong { font-weight: 700; }
+.ProseMirror em { font-style: italic; }
+
+.scroll-page h1, .scroll-page h2 { margin: 1em 0 0.5em; }
+.scroll-page h1 { font-size: 1.5em; font-weight: 700; }
+.scroll-page h2 { font-size: 1.25em; font-weight: 600; }
+.scroll-page p { margin: 0.5em 0; line-height: 1.9; }
+.scroll-page ul, .scroll-page ol { padding-left: 1.5em; margin: 0.5em 0; }
+.scroll-page ul { list-style: disc; }
+.scroll-page ol { list-style: decimal; }
+.scroll-page blockquote { border-left: 3px solid rgba(255,255,255,0.2); padding-left: 1em; margin: 0.5em 0; opacity: 0.8; font-style: italic; }

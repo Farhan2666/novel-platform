@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NovelNest
 
-## Getting Started
+Platform UGC untuk penulis dan pembaca novel. Gratis baca, gratis terbitkan karya.
 
-First, run the development server:
+## Fitur
+
+- **Auth** — Register, login, JWT cookie-based, role system (reader/author/admin)
+- **Novel** — CRUD, genre/tag/category, cover upload, search, filter, pagination
+- **Chapter** — Rich text editor (TipTap), scroll & flip reading mode, tema, font scaling
+- **Review & Report** — Bintang 1-5, komentar, sistem laporan dengan auto-flag
+- **Author Dashboard** — Kelola novel & chapter, edit/hapus, statistik
+- **Admin Panel** — Kelola user/novel/report, genre & tag management, flagged chapters
+- **Bookmark** — Simpan novel favorit
+- **Riwayat Baca** — Auto-save progress, "Lanjut Baca"
+- **Komentar Chapter** — Diskusi per bab
+- **Wallet & Koin** — Sistem pembelian bab premium (struktur siap)
+- **Email Verification** — Verifikasi email & reset password (dev: token di console)
+- **Security** — Rate limiting, XSS sanitization, HTTP-only cookies
+- **SEO** — Sitemap, robots.txt, metadata dinamis
+- **Error Pages** — 404 & 500 custom
+
+## Stack
+
+- Next.js 14 (App Router) + TypeScript
+- Prisma + SQLite (bisa diganti PostgreSQL)
+- Tailwind CSS
+- TipTap (rich text editor)
+- JWT + bcryptjs
+- Vitest (testing)
+
+## Mulai
 
 ```bash
+# Install
+npm install
+
+# Setup database
+npx prisma generate && npx prisma db push
+
+# Seed data dummy
+npm run seed
+
+# Development
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build production
+npm run build
+
+# Test
+npm test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Akun Dummy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Role | Email | Password |
+|------|-------|----------|
+| Author | penulis@novelnest.com | password123 |
+| Reader | pembaca@novelnest.com | password123 |
+| Author | rin@novelnest.com | password123 |
+| Author | bayu@novelnest.com | password123 |
+| Author | dian@novelnest.com | password123 |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Untuk akses admin, ubah role user via Prisma: `npx prisma db execute` atau langsung di file `dev.db`.
 
-## Learn More
+## Struktur
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/
+│   ├── api/        # REST API routes
+│   ├── admin/      # Admin panel
+│   ├── author/     # Author dashboard
+│   ├── auth/       # Login, register, reset password
+│   ├── novels/     # Browse & detail novel
+│   └── profile/    # User profile
+├── components/     # Layout, editor, reading theme
+└── lib/            # Auth, prisma, rate-limit, utils
+prisma/
+└── schema.prisma   # Database schema
+```
