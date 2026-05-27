@@ -18,7 +18,12 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await prisma.user.findFirst({
-      where: { OR: [{ email: identifier }, { username: identifier }] },
+      where: {
+        OR: [
+          { email: { equals: identifier, mode: "insensitive" } },
+          { username: identifier },
+        ],
+      },
       select: { id: true, username: true, email: true, role: true, avatarUrl: true, password: true },
     });
     if (!user) {

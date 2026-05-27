@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     const { username, email, password } = await request.json();
     const cleanUsername = sanitizeHtml(username?.trim() || "");
-    const cleanEmail = sanitizeHtml(email?.trim() || "");
+    const cleanEmail = sanitizeHtml(email?.trim().toLowerCase() || "");
 
     if (!cleanUsername || !cleanEmail || !password) {
       return NextResponse.json({ error: "Semua field wajib diisi" }, { status: 400 });
