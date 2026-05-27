@@ -252,17 +252,23 @@ function ReadingContent() {
       {navMode === "scroll" ? (
         <div
           ref={contentRef}
-          className="scroll-page pt-16"
+          className="scroll-page pt-16 px-4 max-w-[680px] mx-auto"
           style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}
-          dangerouslySetInnerHTML={{
-            __html: /<[a-z][\s\S]*>/i.test(chapter.content)
-              ? chapter.content
-              : chapter.content.replace(/\n/g, "<br/>")
-          }}
-        />
+        >
+          <div
+            className="reading-container"
+            dangerouslySetInnerHTML={{
+              __html: /<[a-z][\s\S]*>/i.test(chapter.content)
+                ? chapter.content
+                : chapter.content.replace(/\n\n+/g, "</p><p>").replace(/\n/g, "<br/>")
+            }}
+          />
+        </div>
       ) : (
-        <div ref={flipContainerRef} className="flip-page pt-16" style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
-          <p>{pages[currentPage] || ""}</p>
+        <div ref={flipContainerRef} className="flip-page pt-16 px-6 max-w-[680px] mx-auto" style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
+          <div className="reading-container">
+            <p>{pages[currentPage] || ""}</p>
+          </div>
           <div className="text-center text-[10px] opacity-30 mt-8">
             {currentPage + 1} / {pages.length}
           </div>

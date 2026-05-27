@@ -45,6 +45,47 @@ body {
 .ProseMirror strong { font-weight: 700; }
 .ProseMirror em { font-style: italic; }
 
+.reading-container p {
+  margin: 1.2em 0;
+  line-height: 2;
+  text-align: justify;
+  word-break: break-word;
+  hyphens: auto;
+  letter-spacing: 0.01em;
+}
+.reading-container h1 {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 1.5em 0 0.8em;
+  line-height: 1.4;
+}
+.reading-container h2 {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 1.2em 0 0.6em;
+  line-height: 1.4;
+}
+.reading-container ul,
+.reading-container ol {
+  padding-left: 1.5em;
+  margin: 1em 0;
+  line-height: 2;
+}
+.reading-container ul { list-style: disc; }
+.reading-container ol { list-style: decimal; }
+.reading-container li { margin: 0.4em 0; }
+.reading-container blockquote {
+  border-left: 3px solid rgba(255,255,255,0.2);
+  padding-left: 1.2em;
+  margin: 1.2em 0;
+  opacity: 0.85;
+  font-style: italic;
+  line-height: 1.9;
+}
+.reading-container strong { font-weight: 700; }
+.reading-container em { font-style: italic; }
+.reading-container p:first-child { margin-top: 0; }
+
 .scroll-page h1, .scroll-page h2 { margin: 1em 0 0.5em; }
 .scroll-page h1 { font-size: 1.5em; font-weight: 700; }
 .scroll-page h2 { font-size: 1.25em; font-weight: 600; }
