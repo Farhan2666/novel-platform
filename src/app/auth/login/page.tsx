@@ -22,11 +22,12 @@ export default function LoginPage() {
     setError("");
     try {
       await login(identifier, password);
+      setLoading(false);
       router.push("/");
     } catch (err: any) {
       setError(err.message);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
