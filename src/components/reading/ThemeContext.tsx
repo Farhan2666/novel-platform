@@ -28,6 +28,23 @@ export const FONTS = [
   { id: "georgia", name: "Georgia", className: "font-georgia", category: "Serif" },
 ];
 
+const STORAGE_KEY = "novelnest-reading";
+
+function loadPrefs() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return null;
+}
+
+function savePrefs(prefs: Record<string, any>) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+  } catch {}
+}
+
 interface ThemeContext {
   theme: ThemeConfig;
   themes: ThemeConfig[];
@@ -53,10 +70,11 @@ const ThemeCtx = createContext<ThemeContext>({
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeId, setThemeId] = useState("classic");
-  const [fontScale, setFontScale] = useState(100);
-  const [navMode, setNavMode] = useState<"scroll" | "flip">("scroll");
-  const [fontFamily, setFontFamily] = useState("inter");
+  const saved = loadPrefs();
+  const [themeId, setThemeId] = useState(saved?.themeId || "classic");
+  const [fontScale, setFontScale] = useState(saved?.fontScale || 100);
+  const [navMode, setNavMode] = useState<"scroll" | "flip">(saved?.navMode || "scroll");
+  const [fontFamily, setFontFamily] = useState(saved?.fontFamily || "inter");
 
   const theme = THEMES.find((t) => t.id === themeId) || THEMES[0];
 
@@ -66,8 +84,34 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.style.setProperty("--reading-font-scale", `${fontScale}%`);
   }, [theme, fontScale]);
 
+  const handleSetTheme = useCallback((id: string) => {
+    setThemeId(id);
+    savePrefs({ themeId: id, fontScale, navMode, fontFamily });
+  }, [fontScale, navMode, fontFamily]);
+
+  const handleSetFontScale = useCallback((s: number) => {
+    setFontScale(s);
+    savePrefs({ themeId, fontScale: s, navMode, fontFamily });
+  }, [themeId, navMode, fontFamily]);
+
+  const handleSetNavMode = useCallback((m: "scroll" | "flip") => {
+    setNavMode(m);
+    savePrefs({ themeId, fontScale, navMode: m, fontFamily });
+  }, [themeId, fontScale, fontFamily]);
+
+  const handleSetFontFamily = useCallback((f: string) => {
+    setFontFamily(f);
+    savePrefs({ themeId, fontScale, navMode, fontFamily: f });
+  }, [themeId, fontScale, navMode]);
+
   return (
-    <ThemeCtx.Provider value={{ theme, themes: THEMES, fontScale, navMode, fontFamily, setTheme: setThemeId, setFontScale, setNavMode, setFontFamily }}>
+    <ThemeCtx.Provider value={{
+      theme, themes: THEMES, fontScale, navMode, fontFamily,
+      setTheme: handleSetTheme,
+      setFontScale: handleSetFontScale,
+      setNavMode: handleSetNavMode,
+      setFontFamily: handleSetFontFamily,
+    }}>
       {children}
     </ThemeCtx.Provider>
   );

@@ -41,7 +41,11 @@ function ReadingContent() {
           setChapter(data);
           document.title = `Bab ${data.chapterNumber}: ${data.title} - ${data.novel?.title} - NovelNest`;
           if (data.novel?.fontFamily) {
-            setFontFamily(data.novel.fontFamily);
+            // Set novel's default font only if reader hasn't chosen one
+            const saved = typeof window !== "undefined" && localStorage.getItem("novelnest-reading");
+            if (!saved) {
+              setFontFamily(data.novel.fontFamily);
+            }
           }
         }
         if (cmRes.ok) setComments(await cmRes.json());
