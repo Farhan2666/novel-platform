@@ -8,14 +8,14 @@ import {
   ChevronUp, ArrowLeft, ArrowRight, BookOpen, AlertTriangle, MessageSquare, Send
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import { ThemeProvider, useTheme } from "@/components/reading/ThemeContext";
+import { ThemeProvider, useTheme, FONTS } from "@/components/reading/ThemeContext";
 import { cn } from "@/lib/utils";
 
 function ReadingContent() {
   const { id, chapterId } = useParams();
   const router = useRouter();
   const { user } = useAuth();
-  const { theme, themes, fontScale, navMode, setTheme, setFontScale, setNavMode } = useTheme();
+  const { theme, themes, fontScale, navMode, fontFamily, setTheme, setFontScale, setNavMode, setFontFamily } = useTheme();
 
   const [chapter, setChapter] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -40,6 +40,9 @@ function ReadingContent() {
           const data = await chRes.json();
           setChapter(data);
           document.title = `Bab ${data.chapterNumber}: ${data.title} - ${data.novel?.title} - NovelNest`;
+          if (data.novel?.fontFamily) {
+            setFontFamily(data.novel.fontFamily);
+          }
         }
         if (cmRes.ok) setComments(await cmRes.json());
       } catch {} finally {
@@ -47,7 +50,7 @@ function ReadingContent() {
       }
     }
     if (chapterId) fetchChapter();
-  }, [chapterId]);
+  }, [chapterId, setFontFamily]);
 
   const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -245,6 +248,24 @@ function ReadingContent() {
                 </button>
               </div>
             </div>
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-wider opacity-50 mb-2">Font</p>
+              <div className="flex flex-wrap gap-1.5">
+                {FONTS.map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setFontFamily(f.id)}
+                    className={cn(
+                      "px-2.5 py-1.5 rounded-lg text-xs transition-all",
+                      fontFamily === f.id ? "bg-emerald-500 text-black font-medium" : "opacity-60 hover:opacity-100"
+                    )}
+                    style={{ fontFamily: `var(--font-${f.id === "georgia" ? "inter" : f.id === "ptsans" ? "inter" : f.id}), ${f.id === "georgia" ? "Georgia, serif" : "system-ui, sans-serif"}` }}
+                  >
+                    {f.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -252,7 +273,7 @@ function ReadingContent() {
       {navMode === "scroll" ? (
         <div
           ref={contentRef}
-          className="scroll-page pt-16 px-4 max-w-[680px] mx-auto"
+          className={`scroll-page pt-16 px-4 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
           style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}
         >
           <div
@@ -265,7 +286,7 @@ function ReadingContent() {
           />
         </div>
       ) : (
-        <div ref={flipContainerRef} className="flip-page pt-16 px-6 max-w-[680px] mx-auto" style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
+        <div ref={flipContainerRef} className={`flip-page pt-16 px-6 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
           <div className="reading-container">
             <p>{pages[currentPage] || ""}</p>
           </div>

@@ -5,7 +5,7 @@ import { requireRole } from "@/lib/auth";
 export async function POST(request: NextRequest) {
   try {
     const user = await requireRole("author", "admin");
-    const { title, description, coverUrl, categoryId, genreIds, tagIds } = await request.json();
+    const { title, description, coverUrl, fontFamily, categoryId, genreIds, tagIds } = await request.json();
 
     if (!title || !description) {
       return Response.json({ error: "Judul dan deskripsi wajib diisi" }, { status: 400 });
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
         title,
         description,
         coverUrl: coverUrl || "",
+        fontFamily: fontFamily || "inter",
         ...(categoryId && { categoryId }),
         ...(genreIds?.length && {
           genres: {
@@ -64,7 +65,7 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const user = await requireRole("author", "admin");
-    const { id, title, description, coverUrl, status, categoryId, genreIds, tagIds } = await request.json();
+    const { id, title, description, coverUrl, fontFamily, status, categoryId, genreIds, tagIds } = await request.json();
 
     const novel = await prisma.novel.findUnique({ where: { id }, select: { authorId: true } });
     if (!novel) return Response.json({ error: "Novel tidak ditemukan" }, { status: 404 });
@@ -77,6 +78,7 @@ export async function PUT(request: NextRequest) {
       ...(title && { title }),
       ...(description && { description }),
       ...(coverUrl !== undefined && { coverUrl }),
+      ...(fontFamily && { fontFamily }),
       ...(status && { status }),
       ...(categoryId !== undefined && { categoryId: categoryId || null }),
     };

@@ -12,6 +12,7 @@ export async function GET(
       where: { id },
       select: {
         id: true, title: true, description: true, coverUrl: true,
+        fontFamily: true,
         status: true, underReview: true, categoryId: true,
         createdAt: true, updatedAt: true,
         author: { select: { id: true, username: true } },

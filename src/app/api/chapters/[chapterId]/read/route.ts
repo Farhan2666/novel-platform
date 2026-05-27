@@ -14,7 +14,7 @@ export async function GET(
         accessType: true, coinPrice: true, underReview: true, createdAt: true,
         novel: {
           select: {
-            id: true, title: true, underReview: true,
+            id: true, title: true, underReview: true, fontFamily: true,
             chapters: {
               select: { id: true, chapterNumber: true, title: true },
               orderBy: { chapterNumber: "asc" },

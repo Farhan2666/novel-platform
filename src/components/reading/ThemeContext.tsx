@@ -19,14 +19,25 @@ const THEMES: ThemeConfig[] = [
   { id: "old-book", name: "Buku Tua", bg: "#F4ECD8", text: "#1F1A12", isTexture: true },
 ];
 
+export const FONTS = [
+  { id: "inter", name: "Inter", className: "font-inter", category: "Sans-serif" },
+  { id: "atkinson", name: "Atkinson Hyperlegible", className: "font-atkinson", category: "Sans-serif" },
+  { id: "literata", name: "Literata", className: "font-literata", category: "Serif" },
+  { id: "merriweather", name: "Merriweather", className: "font-merriweather", category: "Serif" },
+  { id: "lora", name: "Lora", className: "font-lora", category: "Serif" },
+  { id: "georgia", name: "Georgia", className: "font-georgia", category: "Serif" },
+];
+
 interface ThemeContext {
   theme: ThemeConfig;
   themes: ThemeConfig[];
   fontScale: number;
   navMode: "scroll" | "flip";
+  fontFamily: string;
   setTheme: (id: string) => void;
   setFontScale: (s: number) => void;
   setNavMode: (m: "scroll" | "flip") => void;
+  setFontFamily: (f: string) => void;
 }
 
 const ThemeCtx = createContext<ThemeContext>({
@@ -34,15 +45,18 @@ const ThemeCtx = createContext<ThemeContext>({
   themes: THEMES,
   fontScale: 100,
   navMode: "scroll",
+  fontFamily: "inter",
   setTheme: () => {},
   setFontScale: () => {},
   setNavMode: () => {},
+  setFontFamily: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [themeId, setThemeId] = useState("classic");
   const [fontScale, setFontScale] = useState(100);
   const [navMode, setNavMode] = useState<"scroll" | "flip">("scroll");
+  const [fontFamily, setFontFamily] = useState("inter");
 
   const theme = THEMES.find((t) => t.id === themeId) || THEMES[0];
 
@@ -53,7 +67,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme, fontScale]);
 
   return (
-    <ThemeCtx.Provider value={{ theme, themes: THEMES, fontScale, navMode, setTheme: setThemeId, setFontScale, setNavMode }}>
+    <ThemeCtx.Provider value={{ theme, themes: THEMES, fontScale, navMode, fontFamily, setTheme: setThemeId, setFontScale, setNavMode, setFontFamily }}>
       {children}
     </ThemeCtx.Provider>
   );

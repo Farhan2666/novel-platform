@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, ChevronLeft, Upload } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { FONTS } from "@/components/reading/ThemeContext";
 
 export default function EditNovelPage() {
   const { id } = useParams();
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const [form, setForm] = useState({ title: "", description: "", coverUrl: "", status: "ongoing" });
+  const [form, setForm] = useState({ title: "", description: "", coverUrl: "", status: "ongoing", fontFamily: "inter" });
   const [categoryId, setCategoryId] = useState("");
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -36,7 +37,7 @@ export default function EditNovelPage() {
 
       if (novelRes.ok) {
         const novel = await novelRes.json();
-        setForm({ title: novel.title, description: novel.description, coverUrl: novel.coverUrl, status: novel.status });
+        setForm({ title: novel.title, description: novel.description, coverUrl: novel.coverUrl, status: novel.status, fontFamily: novel.fontFamily || "inter" });
         setCategoryId(novel.categoryId || "");
         setSelectedGenres(novel.genres?.map((g: any) => g.genre.id) || []);
         setSelectedTags(novel.tags?.map((t: any) => t.tag.id) || []);
@@ -155,6 +156,15 @@ export default function EditNovelPage() {
               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
             </label>
           </div>
+        </div>
+        <div>
+          <label className="text-xs text-white/60 block mb-1">Font Default (untuk pembaca)</label>
+          <select value={form.fontFamily} onChange={(e) => setForm({ ...form, fontFamily: e.target.value })} className="input">
+            {FONTS.map((f) => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+          <p className="text-[10px] text-white/30 mt-1">Pembaca tetap bisa mengganti font saat membaca</p>
         </div>
         <button type="submit" disabled={saving} className="btn-primary w-full py-3 flex items-center justify-center gap-2 disabled:opacity-50">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}

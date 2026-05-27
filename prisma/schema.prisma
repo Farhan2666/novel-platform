@@ -75,6 +75,7 @@ model Novel {
   title       String
   description String
   coverUrl    String      @default("")
+  fontFamily  String      @default("inter")
   status      String      @default("ongoing")
   underReview Boolean     @default(false)
   categoryId  String?

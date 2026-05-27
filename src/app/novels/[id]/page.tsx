@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { BookOpen, Star, Clock, AlertTriangle, MessageSquare, Send, Loader2, ChevronLeft, Flag, Tag, FolderOpen, Bookmark } from "lucide-react";
+import { BookOpen, Star, Clock, AlertTriangle, MessageSquare, Send, Loader2, ChevronLeft, Flag, Tag, FolderOpen, Bookmark, ChevronRight, Lock, Unlock } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 export default function NovelDetailPage() {
@@ -218,27 +218,62 @@ export default function NovelDetailPage() {
         </div>
       </div>
 
-      <div className="space-y-3">
-        <h2 className="font-semibold">Daftar Bab</h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-emerald-400" /> Daftar Bab
+            <span className="text-xs text-white/30 font-normal">({novel._count?.chapters || 0})</span>
+          </h2>
+          {lastRead && (
+            <Link
+              href={`/novels/${id}/chapters/${lastRead.chapterId}`}
+              className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+            >
+              <Clock className="w-3 h-3" /> Lanjut Bab {lastRead.chapter?.chapterNumber}
+            </Link>
+          )}
+        </div>
         {novel.chapters?.length === 0 ? (
-          <p className="text-sm text-white/40">Belum ada bab</p>
+          <div className="text-center py-12 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <BookOpen className="w-8 h-8 text-white/10 mx-auto mb-2" />
+            <p className="text-sm text-white/30">Belum ada bab</p>
+          </div>
         ) : (
-          <div className="space-y-1">
-            {novel.chapters?.map((ch: any, i: number) => (
-              <Link
-                key={ch.id}
-                href={`/novels/${id}/chapters/${ch.id}`}
-                className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-white/30 w-6">{ch.chapterNumber}</span>
-                  <div>
-                    <p className="text-sm font-medium">{ch.title || `Bab ${ch.chapterNumber}`}</p>
+          <div className="space-y-1.5">
+            {novel.chapters?.map((ch: any, i: number) => {
+              const isPremium = ch.accessType === "premium";
+              return (
+                <Link
+                  key={ch.id}
+                  href={`/novels/${id}/chapters/${ch.id}`}
+                  className="group flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-emerald-500/5 hover:border-emerald-500/20 transition-all"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 group-hover:bg-emerald-500/20 transition-colors">
+                    <span className="text-xs font-bold text-emerald-400">{ch.chapterNumber}</span>
                   </div>
-                </div>
-                <span className="text-xs text-white/30">Baca</span>
-              </Link>
-            ))}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate group-hover:text-emerald-400 transition-colors">
+                      {ch.title || `Bab ${ch.chapterNumber}`}
+                    </p>
+                    <p className="text-[10px] text-white/30 mt-0.5">
+                      {new Date(ch.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {isPremium ? (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1">
+                        <Lock className="w-2.5 h-2.5" /> Premium
+                      </span>
+                    ) : (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                        <Unlock className="w-2.5 h-2.5" /> Gratis
+                      </span>
+                    )}
+                    <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-emerald-400 transition-colors" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

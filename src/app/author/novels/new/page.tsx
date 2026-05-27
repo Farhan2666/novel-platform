@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BookOpen, Loader2, X, Upload } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { FONTS } from "@/components/reading/ThemeContext";
 
 export default function NewNovelPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const [form, setForm] = useState({ title: "", description: "", coverUrl: "" });
+  const [form, setForm] = useState({ title: "", description: "", coverUrl: "", fontFamily: "inter" });
   const [categoryId, setCategoryId] = useState("");
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -65,7 +66,7 @@ export default function NewNovelPage() {
       const res = await fetch("/api/novels/author", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, categoryId: categoryId || undefined, genreIds: selectedGenres, tagIds: selectedTags }),
+        body: JSON.stringify({ ...form, fontFamily: form.fontFamily, categoryId: categoryId || undefined, genreIds: selectedGenres, tagIds: selectedTags }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -134,6 +135,15 @@ export default function NewNovelPage() {
             </label>
           </div>
           <p className="text-[10px] text-white/30 mt-1">Masukkan URL atau upload file gambar. Max 2MB.</p>
+        </div>
+        <div>
+          <label className="text-xs text-white/60 block mb-1">Font Default (untuk pembaca)</label>
+          <select value={form.fontFamily} onChange={(e) => setForm({ ...form, fontFamily: e.target.value })} className="input">
+            {FONTS.map((f) => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+          <p className="text-[10px] text-white/30 mt-1">Pembaca tetap bisa mengganti font saat membaca</p>
         </div>
         <button type="submit" disabled={saving} className="btn-primary w-full py-3 flex items-center justify-center gap-2 disabled:opacity-50">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
