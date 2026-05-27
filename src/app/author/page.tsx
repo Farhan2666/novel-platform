@@ -111,7 +111,7 @@ export default function AuthorDashboard() {
       ) : (
         <div className="space-y-3">
           {novels.map((novel: any) => (
-            <div key={novel.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4">
+            <Link key={novel.id} href={`/author/novels/${novel.id}`} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4 hover:bg-white/[0.07] hover:border-white/20 transition-all group">
               <div className="w-12 h-16 bg-white/5 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                 {novel.coverUrl ? (
                   <img src={novel.coverUrl} alt="" className="w-full h-full object-cover" />
@@ -121,7 +121,7 @@ export default function AuthorDashboard() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-medium text-sm truncate">{novel.title}</h3>
+                  <h3 className="font-medium text-sm truncate group-hover:text-emerald-400 transition-colors">{novel.title}</h3>
                   {novel.underReview && <span className="text-[10px] text-yellow-400 shrink-0">Review</span>}
                   <span className={`text-[10px] shrink-0 ${novel.status === "completed" ? "text-emerald-400" : "text-yellow-400"}`}>
                     {novel.status === "completed" ? "Selesai" : "Ongoing"}
@@ -132,7 +132,7 @@ export default function AuthorDashboard() {
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-[10px] text-white/30">{new Date(novel.createdAt).toLocaleDateString("id-ID")}</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
