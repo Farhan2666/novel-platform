@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         title,
         description,
         coverUrl: coverUrl || "",
-        ...(categoryId && { category: { connect: { id: categoryId } } }),
+        ...(categoryId && { categoryId }),
         ...(genreIds?.length && {
           genres: {
             create: genreIds.map((genreId: string) => ({ genreId })),
