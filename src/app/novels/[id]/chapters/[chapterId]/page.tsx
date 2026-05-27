@@ -198,8 +198,39 @@ function ReadingContent() {
         </div>
       </div>
 
+      {/* Quick font toggle bar */}
+      <div
+        className="fixed top-12 left-0 right-0 z-20 flex items-center justify-center gap-1 px-4 py-1.5 border-b transition-colors overflow-x-auto"
+        style={{
+          backgroundColor: theme.id === "dark" ? "#121212" : currentTheme.bg,
+          borderColor: theme.id === "dark" ? "#2A2A2A" : "rgba(0,0,0,0.1)",
+        }}
+      >
+        <span className="text-[9px] uppercase tracking-wider opacity-40 mr-1 shrink-0" style={{ color: currentTheme.text }}>Font:</span>
+        {FONTS.slice(0, 4).map((f) => (
+          <button
+            key={f.id}
+            onClick={() => setFontFamily(f.id)}
+            className={cn(
+              "px-2 py-0.5 rounded text-[10px] transition-all shrink-0",
+              fontFamily === f.id ? "bg-emerald-500 text-black font-medium" : "opacity-50 hover:opacity-100"
+            )}
+            style={{ color: fontFamily === f.id ? undefined : currentTheme.text }}
+          >
+            {f.name}
+          </button>
+        ))}
+        <button
+          onClick={() => setShowSettings(true)}
+          className="px-2 py-0.5 rounded text-[10px] opacity-40 hover:opacity-80 shrink-0"
+          style={{ color: currentTheme.text }}
+        >
+          +{FONTS.length - 4} lain
+        </button>
+      </div>
+
       {showSettings && (
-        <div className="fixed top-12 left-0 right-0 z-30 p-4 border-b transition-colors" style={{
+        <div className="fixed top-[7.5rem] left-0 right-0 z-30 p-4 border-b transition-colors" style={{
           backgroundColor: theme.id === "dark" ? "#1A1A1A" : currentTheme.bg,
           borderColor: theme.id === "dark" ? "#2A2A2A" : "rgba(0,0,0,0.1)",
           color: currentTheme.text,
@@ -277,7 +308,7 @@ function ReadingContent() {
       {navMode === "scroll" ? (
         <div
           ref={contentRef}
-          className={`scroll-page pt-16 px-4 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
+          className={`scroll-page pt-24 px-4 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
           style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}
         >
           <div
@@ -290,7 +321,7 @@ function ReadingContent() {
           />
         </div>
       ) : (
-        <div ref={flipContainerRef} className={`flip-page pt-16 px-6 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
+        <div ref={flipContainerRef} className={`flip-page pt-24 px-6 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
           <div className="reading-container">
             <p>{pages[currentPage] || ""}</p>
           </div>
