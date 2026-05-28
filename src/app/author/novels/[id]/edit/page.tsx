@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ChevronLeft, Upload } from "lucide-react";
+import { Loader2, ChevronLeft, Upload, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { FONTS } from "@/components/reading/ThemeContext";
 
@@ -66,7 +66,7 @@ export default function EditNovelPage() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const res = await fetch("/api/upload", { method: "POST", body: fd, credentials: "include" });
       const data = await res.json();
       if (res.ok) setForm({ ...form, coverUrl: data.url });
     } catch {} finally { setUploading(false); }
@@ -149,13 +149,27 @@ export default function EditNovelPage() {
         </div>
         <div>
           <label className="text-xs text-white/60 block mb-1">Cover</label>
-          <div className="flex gap-2">
-            <input type="url" value={form.coverUrl} onChange={(e) => setForm({ ...form, coverUrl: e.target.value })} className="input flex-1" placeholder="URL cover" />
-            <label className="btn-outline cursor-pointer text-xs py-2 px-3 flex items-center gap-1.5 shrink-0">
-              {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+          {form.coverUrl ? (
+            <div className="relative">
+              <img src={form.coverUrl} alt="Cover preview" className="w-full h-48 object-cover rounded-xl" />
+              <button type="button" onClick={() => setForm({ ...form, coverUrl: "" })}
+                className="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full hover:bg-black/80 transition">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-emerald-500/50 transition-colors">
+              {uploading ? (
+                <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+              ) : (
+                <>
+                  <Upload className="w-8 h-8 text-white/40 mb-2" />
+                  <span className="text-xs text-white/40">Klik untuk upload cover (max 2MB)</span>
+                </>
+              )}
               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
             </label>
-          </div>
+          )}
         </div>
         <div>
           <label className="text-xs text-white/60 block mb-1">Font Default (untuk pembaca)</label>
