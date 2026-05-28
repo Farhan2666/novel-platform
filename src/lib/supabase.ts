@@ -1,9 +1,5 @@
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error("Supabase env vars not configured");
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 export async function uploadToStorage(
   bucket: string,
@@ -11,6 +7,9 @@ export async function uploadToStorage(
   buffer: Buffer,
   contentType: string,
 ) {
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return { usedFallback: true };
+  }
   const res = await fetch(
     `${supabaseUrl}/storage/v1/object/${bucket}/${filename}`,
     {
@@ -24,9 +23,10 @@ export async function uploadToStorage(
   );
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(err);
+    console.error("Supabase upload error:", err);
+    return { usedFallback: true };
   }
-  return { filename };
+  return { usedFallback: false };
 }
 
 export function getPublicUrl(bucket: string, filename: string) {

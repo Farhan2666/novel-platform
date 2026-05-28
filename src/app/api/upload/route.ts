@@ -1,4 +1,6 @@
 import { NextRequest } from "next/server";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 import { requireAuth } from "@/lib/auth";
 import { uploadToStorage, getPublicUrl } from "@/lib/supabase";
 
@@ -24,8 +26,19 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const mime = `image/${ext === "jpg" ? "jpeg" : ext}`;
 
-    await uploadToStorage(BUCKET, filename, buffer, mime);
-    const url = getPublicUrl(BUCKET, filename);
+    let url: string;
+
+    const result = await uploadToStorage(BUCKET, filename, buffer, mime);
+
+    if (result.usedFallback) {
+      const uploadDir = path.join("/tmp", "uploads");
+      await mkdir(uploadDir, { recursive: true });
+      await writeFile(path.join(uploadDir, filename), buffer);
+      const requestUrl = new URL(request.url);
+      url = `${requestUrl.origin}/api/uploads/${filename}`;
+    } else {
+      url = getPublicUrl(BUCKET, filename);
+    }
 
     return Response.json({ url });
   } catch (e: any) {
