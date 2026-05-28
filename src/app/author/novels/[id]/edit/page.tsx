@@ -21,6 +21,7 @@ export default function EditNovelPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     if (authLoading || !id) return;
@@ -63,13 +64,20 @@ export default function EditNovelPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    setUploadError("");
     try {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: fd, credentials: "include" });
       const data = await res.json();
-      if (res.ok) setForm({ ...form, coverUrl: data.url });
-    } catch {} finally { setUploading(false); }
+      if (!res.ok) {
+        setUploadError(data.error || "Gagal upload");
+      } else {
+        setForm({ ...form, coverUrl: data.url });
+      }
+    } catch (err) {
+      setUploadError("Gagal terhubung ke server");
+    } finally { setUploading(false); }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -170,6 +178,7 @@ export default function EditNovelPage() {
               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
             </label>
           )}
+          {uploadError && <p className="text-[10px] text-red-400 mt-1">{uploadError}</p>}
         </div>
         <div>
           <label className="text-xs text-white/60 block mb-1">Font Default (untuk pembaca)</label>
