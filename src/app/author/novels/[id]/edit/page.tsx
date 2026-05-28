@@ -158,21 +158,21 @@ export default function EditNovelPage() {
         <div>
           <label className="text-xs text-white/60 block mb-1">Cover</label>
           {form.coverUrl ? (
-            <div className="relative">
-              <img src={form.coverUrl} alt="Cover preview" className="w-full h-48 object-cover rounded-xl" />
+            <div className="relative w-48 mx-auto">
+              <img src={form.coverUrl} alt="Cover preview" className="w-full aspect-[3/4] object-cover rounded-xl shadow-lg" />
               <button type="button" onClick={() => setForm({ ...form, coverUrl: "" })}
                 className="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full hover:bg-black/80 transition">
                 <X className="w-4 h-4" />
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-emerald-500/50 transition-colors">
+            <label className="flex flex-col items-center justify-center w-48 mx-auto aspect-[3/4] border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-emerald-500/50 transition-colors">
               {uploading ? (
                 <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
               ) : (
                 <>
                   <Upload className="w-8 h-8 text-white/40 mb-2" />
-                  <span className="text-xs text-white/40">Klik untuk upload cover (max 2MB)</span>
+                  <span className="text-xs text-white/40 text-center px-2">Klik untuk upload cover (max 2MB)</span>
                 </>
               )}
               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
