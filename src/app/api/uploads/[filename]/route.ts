@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getPublicUrl } from "@/lib/supabase";
+
+const BUCKET = "covers";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: { filename: string } },
 ) {
-  const { data } = supabase.storage
-    .from("covers")
-    .getPublicUrl(params.filename);
+  const url = getPublicUrl(BUCKET, params.filename);
 
-  const response = await fetch(data.publicUrl);
+  const response = await fetch(url);
   if (!response.ok) return new NextResponse(null, { status: 404 });
 
   const buffer = Buffer.from(await response.arrayBuffer());
