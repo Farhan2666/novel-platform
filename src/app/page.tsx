@@ -1,32 +1,29 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen, Search, TrendingUp, Star, Pen } from "lucide-react";
-import { prisma } from "@/lib/prisma";
+import { BookOpen, Search, TrendingUp, Star, Pen, Loader2 } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+export default function HomePage() {
+  const [latestNovels, setLatestNovels] = useState<any[]>([]);
+  const [topNovels, setTopNovels] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function HomePage() {
-  const [latestNovels, topNovels] = await Promise.all([
-    prisma.novel.findMany({
-      select: {
-        id: true, title: true, coverUrl: true, status: true, underReview: true,
-        author: { select: { username: true } },
-        category: { select: { name: true } },
-        _count: { select: { chapters: true, reviews: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 8,
-    }),
-    prisma.novel.findMany({
-      select: {
-        id: true, title: true, coverUrl: true, status: true,
-        author: { select: { username: true } },
-        reviews: { select: { rating: true } },
-        _count: { select: { chapters: true } },
-      },
-      orderBy: { updatedAt: "desc" },
-      take: 8,
-    }),
-  ]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch("/api/novels?page=1");
+        if (res.ok) {
+          const data = await res.json();
+          setLatestNovels(data.novels?.slice(0, 8) || []);
+          setTopNovels([]);
+        }
+      } catch {} finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="space-y-12 pb-20">
@@ -55,11 +52,11 @@ export default async function HomePage() {
           </h2>
           <Link href="/novels" className="text-sm text-emerald-400 hover:underline">Lihat Semua</Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {latestNovels.map((novel) => {
-            const avgRating = topNovels.find(n => n.id === novel.id)?.reviews;
-            const rating = avgRating?.length ? Math.round((avgRating.reduce((s, r) => s + r.rating, 0) / avgRating.length) * 10) / 10 : null;
-            return (
+        {loading ? (
+          <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 text-emerald-400 animate-spin" /></div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {latestNovels.map((novel: any) => (
               <Link key={novel.id} href={`/novels/${novel.id}`} className="card overflow-hidden group">
                 <div className="aspect-[3/4] bg-white/5 overflow-hidden flex items-center justify-center">
                   {novel.coverUrl ? (
@@ -70,21 +67,16 @@ export default async function HomePage() {
                 </div>
                 <div className="p-3 space-y-1">
                   <h3 className="font-medium text-sm truncate">{novel.title}</h3>
-                  <p className="text-xs text-white/40 truncate">{novel.author.username}</p>
+                  <p className="text-xs text-white/40 truncate">{novel.author?.username}</p>
                   {novel.category && <p className="text-[10px] text-emerald-400/60">{novel.category.name}</p>}
                   <div className="flex items-center justify-between text-[10px] text-white/40">
-                    <span>{novel._count.chapters} bab</span>
-                    {rating && (
-                      <span className="flex items-center gap-1">
-                        <Star className="w-2.5 h-2.5 fill-yellow-500 text-yellow-500" /> {rating}
-                      </span>
-                    )}
+                    <span>{novel._count?.chapters || 0} bab</span>
                   </div>
                 </div>
               </Link>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="max-w-7xl mx-auto px-4">
@@ -96,8 +88,6 @@ export default async function HomePage() {
           <Link href="/auth/register" className="btn-primary">Mulai Menulis Gratis</Link>
         </div>
       </section>
-
-
     </div>
   );
 }
