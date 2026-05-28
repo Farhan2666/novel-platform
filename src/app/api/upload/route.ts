@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { requireAuth } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,12 +19,22 @@ export async function POST(request: NextRequest) {
     }
 
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const uploadDir = path.join("/tmp", "uploads");
-    await mkdir(uploadDir, { recursive: true });
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadDir, filename), buffer);
 
-    return Response.json({ url: `/api/uploads/${filename}` });
+    const { error } = await supabase.storage
+      .from("covers")
+      .upload(filename, buffer, {
+        contentType: `image/${ext === "jpg" ? "jpeg" : ext}`,
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    const { data: publicUrl } = supabase.storage
+      .from("covers")
+      .getPublicUrl(filename);
+
+    return Response.json({ url: publicUrl.publicUrl });
   } catch (e: any) {
     if (e.message === "Unauthorized") return Response.json({ error: "Login diperlukan" }, { status: 401 });
     return Response.json({ error: e.message }, { status: 500 });

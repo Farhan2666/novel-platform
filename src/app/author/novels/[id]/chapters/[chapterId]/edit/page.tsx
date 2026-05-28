@@ -42,6 +42,7 @@ export default function EditChapterPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: title.trim(), content }),
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -71,7 +72,7 @@ export default function EditChapterPage() {
         </div>
         <div>
           <label className="text-xs text-white/60 block mb-1">Konten</label>
-          <RichEditor content={content} onChange={setContent} />
+          {!loading && <RichEditor key={chapterId} content={content} onChange={setContent} />}
         </div>
         <button type="submit" disabled={saving} className="btn-primary w-full py-3 flex items-center justify-center gap-2 disabled:opacity-50">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
