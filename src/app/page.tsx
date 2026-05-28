@@ -2,6 +2,8 @@ import Link from "next/link";
 import { BookOpen, Search, TrendingUp, Star, Pen } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [latestNovels, topNovels] = await Promise.all([
     prisma.novel.findMany({
