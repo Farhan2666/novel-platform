@@ -309,7 +309,7 @@ function ReadingContent() {
       {navMode === "scroll" ? (
         <div
           ref={contentRef}
-          className={`scroll-page pt-36 px-4 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
+          className={`scroll-page pt-36 px-5 sm:px-8 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`}
           style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}
         >
           <div
@@ -322,7 +322,7 @@ function ReadingContent() {
           />
         </div>
       ) : (
-        <div ref={flipContainerRef} className={`flip-page pt-36 px-6 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
+        <div ref={flipContainerRef} className={`flip-page pt-36 px-5 sm:px-8 max-w-[680px] mx-auto ${FONTS.find(f => f.id === fontFamily)?.className || "font-inter"}`} style={{ fontSize: `${fontScale}%`, color: currentTheme.text }}>
           <div className="reading-container">
             <p>{pages[currentPage] || ""}</p>
           </div>

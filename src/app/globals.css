@@ -54,30 +54,29 @@ body {
 .ProseMirror em { font-style: italic; }
 
 .reading-container p {
-  margin: 1.2em 0;
-  line-height: 2;
-  text-align: justify;
+  margin: 1.5em 0;
+  line-height: 1.85;
+  text-align: left;
   word-break: break-word;
-  hyphens: auto;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
 }
 .reading-container h1 {
   font-size: 1.4em;
   font-weight: 700;
-  margin: 1.5em 0 0.8em;
+  margin: 1.8em 0 0.6em;
   line-height: 1.4;
 }
 .reading-container h2 {
   font-size: 1.2em;
   font-weight: 600;
-  margin: 1.2em 0 0.6em;
+  margin: 1.5em 0 0.5em;
   line-height: 1.4;
 }
 .reading-container ul,
 .reading-container ol {
   padding-left: 1.5em;
-  margin: 1em 0;
-  line-height: 2;
+  margin: 1.4em 0;
+  line-height: 1.85;
 }
 .reading-container ul { list-style: disc; }
 .reading-container ol { list-style: decimal; }
@@ -85,15 +84,16 @@ body {
 .reading-container blockquote {
   border-left: 3px solid rgba(255,255,255,0.2);
   padding-left: 1.2em;
-  margin: 1.2em 0;
+  margin: 1.4em 0;
   opacity: 0.85;
   font-style: italic;
-  line-height: 1.9;
+  line-height: 1.75;
 }
 .reading-container strong { font-weight: 700; }
 .reading-container em { font-style: italic; }
 .reading-container p:first-child { margin-top: 0; }
 
+.scroll-page { padding-bottom: 4rem; }
 .scroll-page h1, .scroll-page h2 { margin: 1em 0 0.5em; }
 .scroll-page h1 { font-size: 1.5em; font-weight: 700; }
 .scroll-page h2 { font-size: 1.25em; font-weight: 600; }
@@ -102,3 +102,4 @@ body {
 .scroll-page ul { list-style: disc; }
 .scroll-page ol { list-style: decimal; }
 .scroll-page blockquote { border-left: 3px solid rgba(255,255,255,0.2); padding-left: 1em; margin: 0.5em 0; opacity: 0.8; font-style: italic; }
+.scroll-page img { max-width: 100%; height: auto; border-radius: 8px; margin: 1.5em auto; display: block; }

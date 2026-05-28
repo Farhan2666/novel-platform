@@ -13,9 +13,9 @@ interface ThemeConfig {
 
 const THEMES: ThemeConfig[] = [
   { id: "classic", name: "Klasik", bg: "#F4ECD8", text: "#2B2519", isTexture: false },
-  { id: "dark", name: "Malam", bg: "#121212", text: "#E0E0E0", isTexture: false },
-  { id: "mint", name: "Estetik Mint", bg: "#E8F5E9", text: "#263238", isTexture: false },
-  { id: "pink", name: "Estetik Soft Pink", bg: "#FCE4EC", text: "#4A148C", isTexture: false },
+  { id: "dark", name: "Malam", bg: "#0F0F0F", text: "#CDCDCD", isTexture: false },
+  { id: "mint", name: "Estetik Mint", bg: "#E8F5E9", text: "#37474F", isTexture: false },
+  { id: "pink", name: "Estetik Soft Pink", bg: "#FCE4EC", text: "#4E342E", isTexture: false },
   { id: "old-book", name: "Buku Tua", bg: "#F4ECD8", text: "#1F1A12", isTexture: true },
 ];
 
