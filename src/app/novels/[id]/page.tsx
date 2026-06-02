@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { BookOpen, Star, Clock, AlertTriangle, MessageSquare, Send, Loader2, ChevronLeft, Flag, Tag, FolderOpen, Bookmark, ChevronRight, Lock, Unlock } from "lucide-react";
-import CoverImage from "@/components/CoverImage";
+import NovelCover from "@/components/novel/NovelCover";
 import { useAuth } from "@/lib/auth-context";
 
 export default function NovelDetailPage() {
@@ -131,8 +131,8 @@ export default function NovelDetailPage() {
       )}
 
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-48 aspect-[3/4] bg-white/5 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center">
-          <CoverImage src={novel.coverUrl} alt={novel.title} className="w-full h-full" imgClassName="w-full h-full object-cover" />
+        <div className="w-full md:w-48 shrink-0">
+          <NovelCover src={novel.coverUrl} alt={novel.title} priority />
         </div>
         <div className="flex-1 space-y-3">
           <div className="flex items-start justify-between">

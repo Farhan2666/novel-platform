@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Search, BookOpen, Star, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
-import CoverImage from "@/components/CoverImage";
+import NovelCover from "@/components/novel/NovelCover";
 
 export default function NovelListClient() {
   const searchParams = useSearchParams();
@@ -96,9 +96,7 @@ export default function NovelListClient() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {novels.map((novel: any) => (
               <Link key={novel.id} href={`/novels/${novel.id}`} className="card overflow-hidden group">
-                <div className="aspect-[3/4] bg-white/5 overflow-hidden flex items-center justify-center">
-                  <CoverImage src={novel.coverUrl} alt={novel.title} className="w-full h-full" imgClassName="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                </div>
+                <NovelCover src={novel.coverUrl} alt={novel.title} />
                 <div className="p-3 space-y-1">
                   <h3 className="font-medium text-sm truncate">{novel.title}</h3>
                   <p className="text-xs text-white/40 truncate">{novel.author?.username}</p>
