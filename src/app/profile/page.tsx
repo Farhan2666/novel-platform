@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { User, BookOpen, Clock, Loader2, LogIn, Mail, Calendar, Shield, Edit3, Bookmark, Save, X } from "lucide-react";
+import CoverImage from "@/components/CoverImage";
 import { useAuth } from "@/lib/auth-context";
 
 export default function ProfilePage() {
@@ -159,11 +160,7 @@ export default function ProfilePage() {
                   className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-colors"
                 >
                   <div className="w-10 h-14 bg-white/5 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
-                    {h.novel?.coverUrl ? (
-                      <img src={h.novel.coverUrl} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <BookOpen className="w-4 h-4 text-white/20" />
-                    )}
+                    <CoverImage src={h.novel?.coverUrl || ""} alt={h.novel?.title || ""} className="w-full h-full" imgClassName="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{h.novel?.title}</p>
@@ -187,11 +184,7 @@ export default function ProfilePage() {
               {bookmarks.map((b: any) => (
                 <Link key={b.id} href={`/novels/${b.novel.id}`} className="card overflow-hidden group">
                   <div className="aspect-[3/4] bg-white/5 overflow-hidden flex items-center justify-center">
-                    {b.novel.coverUrl ? (
-                      <img src={b.novel.coverUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                    ) : (
-                      <BookOpen className="w-8 h-8 text-white/20" />
-                    )}
+                    <CoverImage src={b.novel.coverUrl} alt={b.novel.title} className="w-full h-full" imgClassName="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                   </div>
                   <div className="p-3">
                     <h3 className="font-medium text-sm truncate">{b.novel.title}</h3>

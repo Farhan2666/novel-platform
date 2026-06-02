@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, ChevronLeft, Upload, X } from "lucide-react";
+import CoverImage from "@/components/CoverImage";
 import { useAuth } from "@/lib/auth-context";
 import { FONTS } from "@/components/reading/ThemeContext";
 
@@ -159,7 +160,7 @@ export default function EditNovelPage() {
           <label className="text-xs text-white/60 block mb-1">Cover</label>
           {form.coverUrl ? (
             <div className="relative w-48 mx-auto">
-              <img src={form.coverUrl} alt="Cover preview" className="w-full aspect-[3/4] object-cover rounded-xl shadow-lg" />
+              <CoverImage src={form.coverUrl} alt="Cover preview" className="w-full aspect-[3/4] rounded-xl shadow-lg" imgClassName="w-full h-full object-cover rounded-xl" />
               <button type="button" onClick={() => setForm({ ...form, coverUrl: "" })}
                 className="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full hover:bg-black/80 transition">
                 <X className="w-4 h-4" />

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BookOpen, Search, TrendingUp, Star, Pen, Loader2 } from "lucide-react";
+import CoverImage from "@/components/CoverImage";
 
 export default function HomePage() {
   const [latestNovels, setLatestNovels] = useState<any[]>([]);
@@ -59,11 +60,7 @@ export default function HomePage() {
             {latestNovels.map((novel: any) => (
               <Link key={novel.id} href={`/novels/${novel.id}`} className="card overflow-hidden group">
                 <div className="aspect-[3/4] bg-white/5 overflow-hidden flex items-center justify-center">
-                  {novel.coverUrl ? (
-                    <img src={novel.coverUrl} alt={novel.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <BookOpen className="w-8 h-8 text-white/20" />
-                  )}
+                  <CoverImage src={novel.coverUrl} alt={novel.title} className="w-full h-full" imgClassName="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                 </div>
                 <div className="p-3 space-y-1">
                   <h3 className="font-medium text-sm truncate">{novel.title}</h3>

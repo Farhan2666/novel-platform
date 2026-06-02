@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Pen, BookOpen, Plus, Loader2, LogIn, Settings, Star, FileText } from "lucide-react";
+import CoverImage from "@/components/CoverImage";
 import { useAuth } from "@/lib/auth-context";
 
 export default function AuthorDashboard() {
@@ -113,11 +114,7 @@ export default function AuthorDashboard() {
           {novels.map((novel: any) => (
             <Link key={novel.id} href={`/author/novels/${novel.id}`} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4 hover:bg-white/[0.07] hover:border-white/20 transition-all group">
               <div className="w-12 h-16 bg-white/5 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
-                {novel.coverUrl ? (
-                  <img src={novel.coverUrl} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <BookOpen className="w-5 h-5 text-white/20" />
-                )}
+                <CoverImage src={novel.coverUrl} alt={novel.title} className="w-full h-full" imgClassName="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
