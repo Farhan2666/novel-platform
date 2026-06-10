@@ -31,11 +31,13 @@ export async function POST(request: NextRequest) {
     const result = await uploadToStorage(BUCKET, filename, buffer, mime);
 
     if (result.usedFallback) {
-      const uploadDir = path.join("/tmp", "uploads");
+      // Use project-local uploads directory instead of /tmp for serverless compatibility
+      const uploadDir = path.join(process.cwd(), "public", "uploads");
       await mkdir(uploadDir, { recursive: true });
       await writeFile(path.join(uploadDir, filename), buffer);
       const requestUrl = new URL(request.url);
-      url = `${requestUrl.origin}/api/uploads/${filename}`;
+      url = `${requestUrl.origin}/uploads/${filename}`;
+      console.warn("Upload fallback: file saved locally. Configure Supabase storage for production reliability.");
     } else {
       url = getPublicUrl(BUCKET, filename);
     }

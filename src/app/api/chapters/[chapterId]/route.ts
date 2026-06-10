@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, getAuthUser } from "@/lib/auth";
 
 export async function GET(
   _request: NextRequest,
@@ -13,12 +13,44 @@ export async function GET(
       select: {
         id: true, chapterNumber: true, title: true, content: true,
         accessType: true, coinPrice: true, underReview: true, createdAt: true,
-        novel: { select: { id: true, title: true } },
+        novel: { select: { id: true, title: true, authorId: true } },
       },
     });
 
     if (!chapter) {
       return Response.json({ error: "Bab tidak ditemukan" }, { status: 404 });
+    }
+
+    // Block premium content: only return content if free, user is author, or user has purchased
+    if (chapter.accessType === "premium") {
+      const user = await getAuthUser();
+      const isAuthor = user && chapter.novel.authorId === user.id;
+      const isAdmin = user?.role === "admin";
+
+      let hasPurchased = false;
+      if (user && !isAuthor && !isAdmin) {
+        const purchase = await prisma.chapterPurchase.findUnique({
+          where: { userId_chapterId: { userId: user.id, chapterId } },
+        });
+        hasPurchased = !!purchase;
+      }
+
+      if (!isAuthor && !isAdmin && !hasPurchased) {
+        // Return chapter without content for unpurchased premium chapters
+        return Response.json({
+          id: chapter.id,
+          chapterNumber: chapter.chapterNumber,
+          title: chapter.title,
+          content: "",
+          accessType: chapter.accessType,
+          coinPrice: chapter.coinPrice,
+          underReview: chapter.underReview,
+          createdAt: chapter.createdAt,
+          novel: { id: chapter.novel.id, title: chapter.novel.title },
+          locked: true,
+          message: "Bab ini berbayar. Silakan beli untuk membuka konten.",
+        });
+      }
     }
 
     return Response.json(chapter);

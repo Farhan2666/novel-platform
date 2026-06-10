@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch("/api/auth/login", { method: "DELETE" });
+      await fetch("/api/auth/logout", { method: "POST" });
     } catch {}
     document.cookie = "token=; path=/; max-age=0";
     setUser(null);

@@ -19,9 +19,14 @@ export async function POST(
 
     const novel = await prisma.novel.findUnique({
       where: { id },
-      select: { id: true },
+      select: { id: true, authorId: true },
     });
     if (!novel) return Response.json({ error: "Novel tidak ditemukan" }, { status: 404 });
+
+    // Prevent author from reviewing their own novel
+    if (novel.authorId === user.id) {
+      return Response.json({ error: "Penulis tidak bisa memberi ulasan pada novelnya sendiri" }, { status: 403 });
+    }
 
     const existing = await prisma.review.findUnique({
       where: { userId_novelId: { userId: user.id, novelId: id } },

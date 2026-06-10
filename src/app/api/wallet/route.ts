@@ -24,10 +24,12 @@ export async function POST(request: NextRequest) {
 
     const chapter = await prisma.chapter.findUnique({
       where: { id: chapterId },
-      select: { id: true, coinPrice: true, novel: { select: { authorId: true } } },
+      select: { id: true, coinPrice: true, accessType: true, novel: { select: { authorId: true } } },
     });
     if (!chapter) return Response.json({ error: "Bab tidak ditemukan" }, { status: 404 });
+    if (chapter.accessType !== "premium") return Response.json({ error: "Bab ini bukan bab premium" }, { status: 400 });
     if (chapter.coinPrice === 0) return Response.json({ error: "Bab gratis" }, { status: 400 });
+    if (chapter.novel.authorId === user.id) return Response.json({ error: "Penulis tidak perlu membeli bab novelnya sendiri" }, { status: 400 });
 
     const existingPurchase = await prisma.chapterPurchase.findUnique({
       where: { userId_chapterId: { userId: user.id, chapterId } },

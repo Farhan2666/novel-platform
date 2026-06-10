@@ -1,6 +1,24 @@
 const store = new Map<string, { count: number; resetAt: number }>();
 
+const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
+let lastCleanup = Date.now();
+
+/**
+ * Remove expired entries from the rate limit store to prevent memory leaks.
+ */
+function cleanupStore() {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  for (const [key, value] of Array.from(store.entries())) {
+    if (value.resetAt <= now) {
+      store.delete(key);
+    }
+  }
+}
+
 export function rateLimit(key: string, maxAttempts = 5, windowMs = 60000) {
+  cleanupStore();
   const now = Date.now();
   const existing = store.get(key);
 

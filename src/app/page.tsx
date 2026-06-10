@@ -16,8 +16,11 @@ export default function HomePage() {
         const res = await fetch("/api/novels?page=1");
         if (res.ok) {
           const data = await res.json();
-          setLatestNovels(data.novels?.slice(0, 8) || []);
-          setTopNovels([]);
+          const novels = data.novels || [];
+          setLatestNovels(novels.slice(0, 8));
+          // Sort by review count for top novels section
+          const sorted = [...novels].sort((a: any, b: any) => (b._count?.reviews || 0) - (a._count?.reviews || 0));
+          setTopNovels(sorted.slice(0, 8));
         }
       } catch {} finally {
         setLoading(false);
@@ -75,6 +78,35 @@ export default function HomePage() {
           </div>
         )}
       </section>
+
+      {topNovels.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Star className="w-4 h-4 text-yellow-400" /> Populer
+            </h2>
+            <Link href="/novels" className="text-sm text-emerald-400 hover:underline">Lihat Semua</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {topNovels.map((novel: any) => (
+              <Link key={novel.id} href={`/novels/${novel.id}`} className="card overflow-hidden group">
+                <div className="aspect-[3/4] bg-white/5 overflow-hidden flex items-center justify-center">
+                  <CoverImage src={novel.coverUrl} alt={novel.title} className="w-full h-full" imgClassName="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                </div>
+                <div className="p-3 space-y-1">
+                  <h3 className="font-medium text-sm truncate">{novel.title}</h3>
+                  <p className="text-xs text-white/40 truncate">{novel.author?.username}</p>
+                  {novel.category && <p className="text-[10px] text-emerald-400/60">{novel.category.name}</p>}
+                  <div className="flex items-center justify-between text-[10px] text-white/40">
+                    <span>{novel._count?.chapters || 0} bab</span>
+                    <span>{novel._count?.reviews || 0} ulasan</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="max-w-7xl mx-auto px-4">
         <div className="glass rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
