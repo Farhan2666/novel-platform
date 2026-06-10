@@ -18,7 +18,7 @@ export async function uploadToStorage(
         Authorization: `Bearer ${supabaseServiceKey}`,
         "Content-Type": contentType,
       },
-      body: buffer,
+      body: new Uint8Array(buffer),
     },
   );
   if (!res.ok) {
